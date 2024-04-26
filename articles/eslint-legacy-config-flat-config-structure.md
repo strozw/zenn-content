@@ -3,7 +3,7 @@ title: "ESLint の Legacy Config と Flat Config における Plugin 構造の�
 emoji: "🩺"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["eslint", "npm", "javascript", "typescript"]
-published: false
+published: true
 publication_name: yumemi_inc
 ---
 
