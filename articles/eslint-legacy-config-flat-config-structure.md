@@ -4,17 +4,18 @@ emoji: "🩺"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["eslint", "npm", "javascript", "typescript"]
 published: false
+publication_name: yumemi_inc
 ---
 
-ESLint v9 への対応を進めていると、まだ、いくつか Flat Config に対応していない Plugin や Config に遭遇することがあります。その際に、Legacy Config のみ対応している Plugin と、Flat Config も対応している Plugin の両方の構造の違いを知っておくと、Flat Config に向けた対応をすすめる上で便利だったためまとめました。
+## 概要
 
-尚、実際には ESLint v9 に更新する事で、廃止予定になっていた API が削除されているので、それによって移行ができない Plugin も存在するので、こちらも念頭におかれるとよいでしょう。
-https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/
+ESLint v9 への対応を進めていると、いくつか Flat Config に対応していない Plugin や Config に遭遇することがあります。その際に、Legacy Config のみ対応している Plugin と、Flat Config も対応している Plugin の両方の構造の違いを知っておくと、Flat Config に向けた対応をすすめる上で便利だったため、その違いを俯瞰するための資料としてまとめました。
 
 ## 前提
 
 - 以下で例示する Plugin は、パッケージ名を `eslint-plugin-example` として、いくつかのカスタムルールと、カスタム Processor を持つものを想定しています。
 - Plugin の実装方法や API の解説はしない。
+  - [ESLint v9 では、v8 で廃止予定となった API が削除されているため](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#from-context-to-sourcecode)、Plugin を作成したり、ESLint v9 の環境で利用する際には、この点で注意が必要です。ESLint v8 の環境においては問題ないと思われます。
 
 ## Legacy Config Plugin の構造
 
@@ -37,15 +38,12 @@ const plugin = {
         "example/my-rule": "error" 
       }
     }
-    // ...
   },
   rules: {
     "my-rule": myRule
-    // ...
   },
   processors: {
     markdown: myMarkdownProcessor
-    // ...
   }
 }
 
@@ -115,15 +113,14 @@ const plugin = {
   // Custom Rule
   rules: {
     "my-rule": myRule
-    // ... 追加の Rule ...
   },
   processors: {
     hoge: myMarkdownProcessor
-    // ... 追加の Processor ...
   }
 };
 
-// plugins フィールドで plugin object を参照する必要があるため、以下のようにして Config を登録
+// plugins フィールドで plugin object を参照する必要があるため、
+// 以下のようにして Config を登録
 // plugin.configs に登録せずに、別モジュールとして提供してもよい。
 Object.assign(plugin.configs, {
   recommended: [
@@ -132,9 +129,7 @@ Object.assign(plugin.configs, {
       rules: {
         "example/my-rule": "error" 
       }
-      // ... その他の設定 ...
     },
-    // ...
   ]
 });
 
@@ -158,7 +153,8 @@ module.exports = [
     },
 
     // Plugin で利用可能になった Custom Rule の利用
-    // `example/` の部分は、`plugins.example` と対応しており、`<prefix>/<rule>` の形式で指定する
+    // `example/` の部分は、`plugins.example` と対応しており、
+    // `<prefix>/<rule>` の形式で指定する
     // 例) `plugins.sample` としたなら、`sample/` となる
     rules: {
       "example/my-rule": "warn",
@@ -187,20 +183,54 @@ module.exports = [
 ## 両者の構造見ての雑感
 
 ### `configs` 以外は一緒
-- ※  Flat Config では、`processor` のキーに拡張子 (`.md` など)が利用できないという仕様の点で異なる部分はある
-- 実際 `@types/eslint` の `Plugin` をみると、 `configs` の型が `ConfigData` と `FlatConfig` の Union 型の `Record` になっています。
-    - https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/eslint/index.d.ts#L1375-L1380
 
-### [`FlatCompat`](https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config) を使わずに Flat Config に移行できそう
+Flat Config では、`processor` のキーに拡張子 (`.md` など)が利用できないという仕様の点での違いはありつつも、構造としては `configs` 以外は同じであることが分かります。
+実際、 `@types/eslint` の `Plugin` をみると `configs` の型が `ConfigData` と `FlatConfig` の Union 型の `Record` になっています。
 
-とはいえ、以下の点に注意が必要です。
+https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/eslint/index.d.ts#L1375-L1380
 
-- [eslint-plugin-react の issue](https://github.com/jsx-eslint/eslint-plugin-react/issues/3699) のように、ESLint v9 で削除された API を利用しているケース
-  - このケースでは、ESLint v8 のまま Flat Config へ移行するとい行ったことが必要になります。
-- [next lint](https://github.com/vercel/next.js/blob/59ad831a13a121ef815f0e6ea322ae1e66c364ff/packages/next/src/lib/eslint/runLintCheck.ts#L305-L318) と `eslint-config-next` (内部で利用している [@rushstack/eslint-patch](https://www.npmjs.com/package/@rushstack/eslint-patch) が対応していない) の様に、そもそも `eslint.config.js` に対応していないケースもあります。
-  - このケースでは無理に Flat Config 対応を進めないほうが良いでしょう。
 
-## おまけ: 両対応 Plugin の構造
+### ものによっては、[`FlatCompat`](https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config) を使わずに Flat Config に移行できそう
+
+[Flat Config も `rules` と `processor` の構文は同じため](https://eslint.org/docs/latest/use/configure/migration-guide#things-that-havent-changed-between-configuration-file-formats)、例えば、[eslint-plugin-react-hooks](https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks)のように、Sharable Config が `plugins` と `rules` のみの単純なものの場合は、
+https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/src/index.js#L13-L26
+
+以下のように、plugin の指定と、config の指定を分割して行うだけで済む事がわかります。
+
+```js
+const pluginReactHooks = require('eslint-plugin-react-hooks')
+
+module.exports = [
+  {
+    plugins: {
+      // configs.recommended.rules で指定されている rule の
+      // prefix が `react-hooks` になっているため
+      'react-hooks': pluginReactHooks
+    },
+  },
+  {
+    rules: {
+      ...pluginReactHooks.configs.recommended.rules
+    }
+  }
+]
+```
+
+:::message
+#### 移行に際しての注意点
+
+- 利用している Plugin の Shareable Config で `globals` や、`parserOptions` などが利用されているケース
+  - `FlatCompat` を頼る方がよいでしょう。
+- [eslint-plugin-react の issue](https://github.com/jsx-eslint/eslint-plugin-react/issues/3699) のように、[ESLint v9 で削除された API](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#from-context-to-sourcecode) を利用しているケース
+  - ESLint v8 のまま Flat Config へ移行するか、対応していない rule を個別に無効化する必要があります。
+- [next lint](https://github.com/vercel/next.js/blob/59ad831a13a121ef815f0e6ea322ae1e66c364ff/packages/next/src/lib/eslint/runLintCheck.ts#L305-L318) と [eslint-config-next](https://www.npmjs.com/package/eslint-config-next) (内部で利用している [@rushstack/eslint-patch](https://www.npmjs.com/package/@rushstack/eslint-patch) が対応していない) の様に、`eslint.config.js` に対応していないケース 
+  - Flat Config への対応を待つのが無難だと思います。
+:::
+
+
+## オマケ
+
+### 両対応 Plugin の構造
 
 `configs` 以外は基本的に同じ構造をしているため、公開されている Plugin では以下の2パターンをみかけます。
 
@@ -223,12 +253,10 @@ const plugin = {
   // Custom Rule
   rules: {
     "my-rule": myRule
-    // ... 追加の Rule ...
   },
   
   processors: {
     hoge: myMarkdownProcessor
-    // ... 追加の Processor ...
   }
 };
 
@@ -259,6 +287,13 @@ module.exports = {
   }
 };
 ```
+
+### 資料
+
+- [ESLint v9 の Flat Config サポート状況](https://github.com/eslint/eslint/issues/18093)
+- [Flat Config への Migration ガイド](https://eslint.org/docs/latest/use/configure/migration-guide)
+- [Legacy Config 向けの Plugin 作成ガイド](https://eslint.org/docs/v8.x/extend/plugins)
+- [Flat Config 向けの Plugin 作成ガイド](https://eslint.org/docs/latest/extend/plugins)
 
 
 
