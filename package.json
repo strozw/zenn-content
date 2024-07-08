@@ -1,0 +1,14 @@
+{
+  "name": "zenn-content",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "zenn": "zenn"
+  },
+  "keywords": [],
+  "author": "strozw",
+  "devDependencies": {
+    "zenn-cli": "^0.1.154"
+  }
+}
