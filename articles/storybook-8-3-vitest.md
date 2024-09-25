@@ -33,6 +33,14 @@ https://x.com/yannbf/status/1816150365286314333
 
 とはいえ、Storybook の Story が手軽に Vitest で実行できることになったのは大変喜ばしいことなので、この記事ではドキュメントを参照しつつ、React と Next.js におけるセットアップから、テストの実行までを紹介したいと思います。
 
+### 追記: 2024/09/25
+
+後日 (2024/09/24) に、公式の X と Blog にて以下の告知と、記事が公開されました。
+
+https://x.com/storybookjs/status/1838628784720826411
+
+https://storybook.js.org/blog/storybook-8-3/
+
 ## Storybook Vitest Plugin について
 
 Vitest で Storybook の Story を実行するための Plugin になります。
