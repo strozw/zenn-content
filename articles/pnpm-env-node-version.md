@@ -1,5 +1,5 @@
 ---
-title: "pnpm の Node.js 管理可能について"
+title: "pnpm の Node.js 管理機能について"
 emoji: "📘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [pnpm, node]
