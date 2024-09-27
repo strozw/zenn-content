@@ -4,6 +4,7 @@ emoji: "📘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [pnpm, node]
 published: true
+publication_name: yumemi_inc
 ---
 
 ## 概要
