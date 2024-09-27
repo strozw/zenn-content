@@ -15,7 +15,9 @@
     "ja-hiragana-hojodoushi": true,
     "ja-hiragana-keishikimeishi": true,
     "ja-no-abusage": true,
-    "ja-no-mixed-period": true,
+    "ja-no-mixed-period": {
+      "allowPeriodMarks": ["、"]
+    },
     "ja-no-redundant-expression": true,
     "no-double-negative-ja": true,
     "no-doubled-conjunction": true,
