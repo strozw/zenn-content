@@ -7,7 +7,7 @@ published: true
 publication_name: yumemi_inc
 ---
 
-## Storybook 8.3 のリリーつについて
+## Storybook 8.3 のリリースつについて
 
 先日 Storybook 8.3 がリリースされました。
 このリリースでの目玉機能は、なんといっても、待望の Vitest 対応ではないでしょうか。
@@ -16,7 +16,7 @@ publication_name: yumemi_inc
 
 https://x.com/yannbf/status/1816150365286314333
 
-とはいえ、何故か大々的に告知されていなかったり、Changelog には以下のようにあるのですが
+とはいえ、何故か大々的に告知されていなかったり、Changelog には以下のようにあるのですが、
 
 > ⚡️ First-class Vitest integration to run stories as component tests
 > 🔼 Next.js-Vite framework for Vitest compatibility and better DX
@@ -24,7 +24,7 @@ https://x.com/yannbf/status/1816150365286314333
 > 🌐 Experimental Story globals to standardize stories for themes, viewports, and locales
 > 💯 Hundreds more improvements
 
-上記の内、Vitest に関する以下2つについては、実はまだ Experimental だったりと...
+上記の内、Vitest に関する以下2つについては、実はまだ Experimental だったりと...。
 
 > ⚡️ First-class Vitest integration to run stories as component tests
 > 🔼 Next.js-Vite framework for Vitest compatibility and better DX
@@ -146,7 +146,7 @@ export default defineWorkspace([
 ]);
 ```
 
-`defineWorkspace` には、配列で「Vitest の config オブジェクト」あるいは、「Vitest の config のパス」を指定する事ができ、ここでは、プロジェクトルートの `vite.config.ts` を Story 以外の Unit テストの config として見立て、それとは別に `test.name` で `storybook` と命名した 「`*.stories.*` ファイルのみをテストする」 config を定義しているようです。これにより、 `npm exec vitest --project=storybook` で、`stories` のみを対象とした Vitest を実行できるようになります。
+`defineWorkspace` には、配列で「Vitest の config オブジェクト」あるいは、「Vitest の config のパス」を指定でき、ここでは、プロジェクトルートの `vite.config.ts` を Story 以外の Unit テストの config として見立て、それとは別に `test.name` で `storybook` と命名した 「`*.stories.*` ファイルのみをテストする」 config を定義しているようです。これにより、 `npm exec vitest --project=storybook` で、`stories` のみを対象とした Vitest を実行できるようになります。
 
 また、config の内容からも Browser Mode で実行するように設定されていることが分かります。
 
@@ -191,13 +191,13 @@ npm exec vitest --project=storybook
 
 #### Browser Mode を headless にせず実行する
 
-headless を無効化する事で、`borwser.name` で指定しているブラウザで `http://localhost:5173/#/` を開いた状態で起動し、以下のような画面が表示され、ブラウザ上で実行結果を確認する事ができます。
+headless を無効化すると、`borwser.name` で指定しているブラウザで `http://localhost:5173/#/` を開いた状態で起動し、以下のような画面が表示され、ブラウザ上で実行結果を確認できます。
 
 ![Vitest の Browser Mode で起動するGUIのスクリーンショット](/images/storybook-8-3-vitest/2024-09-14-vitest-browser-mode-gui.png)
 
 #### `vitest.workspace.ts` の修正
 
-Vitest の Browser Mode を `headless: false` に修正する
+Vitest の Browser Mode を `headless: false` に修正する。
 
 :::details 修正後の `vitest.workspace.ts`
 
@@ -618,14 +618,14 @@ export default config;
 
 :::
 
-これで、`npm run storybook` や `npm run build-storybook` も Vite で実行され、これまでよりも高速に build できる様になります。
+これで、`npm run storybook` や `npm run build-storybook` も Vite で実行され、これまでよりも高速に build できます。
 
 ## 感想
 
 React については、ドキュメントの [Auto Setup](https://storybook.js.org/docs/writing-tests/vitest-plugin#automatic-setup) を参考にセットアップすれば、わりと素直に実行できることがわかりました。
 （※ 今回は試していませんが、おそらく vue 等も同じ様に設定できるのではないでしょうか。）
 
-また、Next.js については、まだドキュメントの整備ができておらず、[vite-plugin-storybook-nextjs の README](https://github.com/storybookjs/vite-plugin-storybook-nextjs) や example を参照しながら設定を行う必要があるため、注意が必要そうです。（※ vite-plugin-storybook-nextjs の example のコードを確認してみると、8.3 に対応できいなかったりと、こちらも参考にする際に注意が必要です。）
+また、Next.js については、まだドキュメントの整備ができておらず、[vite-plugin-storybook-nextjs の README](https://github.com/storybookjs/vite-plugin-storybook-nextjs) や example を参照しながら設定する必要があるため、注意が必要そうです。（※ vite-plugin-storybook-nextjs の example のコードを確認してみると、8.3 に対応できていなかったりと、こちらも参考にする際、注意が必要です。）
 
 今回は、触れられていませんが、Storybook Vitest Plugin と Next.js の以下の FAQ の内容についても目を通しておく必要がありそうです。
 
