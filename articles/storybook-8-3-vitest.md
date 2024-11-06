@@ -41,18 +41,24 @@ https://x.com/storybookjs/status/1838628784720826411
 
 https://storybook.js.org/blog/storybook-8-3/
 
-### 追記: 2024/10/21
+### 追記: 2024/10/21 (修正済み)
 
-現状、`@vitest/browser` v2.1.2 以降と組み合わせて利用すると、`jsdom` や `happy-dom` を利用した Non-Browser Mode で実行すると、以下の issue に記載のエラーが発生し、テストの実行が失敗します。
+~現状、`@vitest/browser` v2.1.2 以降と組み合わせて利用すると、`jsdom` や `happy-dom` を利用した Non-Browser Mode で実行すると、以下の issue に記載のエラーが発生し、テストの実行が失敗します。~
 
-https://github.com/storybookjs/storybook/issues/29404
+~https://github.com/storybookjs/storybook/issues/29404~
 
-そのため、`jsdom` や `happy-dom` でテストを実行したい場合は、 利用するプロジェクトの `package.json` の `dependencies` で以下を指定する必要があります。
+~そのため、`jsdom` や `happy-dom` でテストを実行したい場合は、 利用するプロジェクトの `package.json` の `dependencies` で以下を指定する必要があります。~
 
 ```
 "@vitest/browser": "2.1.1",
 "vitest": "2.1.1"
 ```
+
+### 追記: 2024/11/06
+
+前述の、`@storybook/experimental-addon-test` と `@vitest/browser` v2.1.2 以降の組み合わせで、Non-Browser Mode での vitest の実行が失敗する問題は、storybook 8.4 で修正されました。 
+
+https://github.com/storybookjs/storybook/releases/tag/v8.4.0#:~:text=Addon%2DTest%3A%20Support%20for%20%40vitest/browser%20v2.1.2
 
 ## Storybook Vitest Plugin について
 
